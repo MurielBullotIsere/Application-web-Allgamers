@@ -11,5 +11,11 @@ Voici ce qui peut être testé :
 - la recherche d'autres joueurs (sections "Joueurs").  
 
 
+### Accès au jeu 
 
-
+Installer xampp  
+Se placer dans le dossier xampp/htdocs  
+Y cloner ce dépot github  
+Lancer xampp  
+Cliquer sur start pour apache et mySQL  
+Taper sur le web http://localhost/Application-web-Allgamers/index.php  
