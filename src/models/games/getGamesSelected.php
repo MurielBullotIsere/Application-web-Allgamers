@@ -4,17 +4,17 @@
  *
  * This function:
  * - Gets the user ID from the session
- * - Connects to the database : src\models\database\databaseConnection.php
+ * - Connects to the database : src/models/database/databaseConnection.php
  * - Fetches the games linked to this user from the `gamesuser` table
- * - For each game, retrieve its data: src\models\games\getGameData.php
+ * - For each game, retrieve its data: src/models/games/getGameData.php
  * - Returns an array containing the user's selected games and their data 
  *
  * @throws Exception If the SQL query preparation or execution fails
  * @return array An array containing the user's selected games and their data.
  */
 
-require_once 'src\models\database\databaseConnection.php';
-require_once 'src\models\games\getGameData.php';
+require_once 'src/models/database/databaseConnection.php';
+require_once 'src/models/games/getGameData.php';
 
 function getGamesSelected() {
     $id = $_SESSION['userData']['id'];

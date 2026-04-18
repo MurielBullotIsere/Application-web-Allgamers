@@ -40,9 +40,9 @@
 */
 
 require_once 'src/models/database/databaseConnection.php';
-require_once 'src\models\games\getGamesSelected.php';
-require_once 'src\models\games\getFavoriteGames.php';
-require_once 'src\models\players\getPlayersData.php';
+require_once 'src/models/games/getGamesSelected.php';
+require_once 'src/models/games/getFavoriteGames.php';
+require_once 'src/models/players/getPlayersData.php';
 
 function getPlayersSelected(string $gameSelected,
                             string $level,

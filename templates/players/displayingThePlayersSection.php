@@ -25,7 +25,7 @@ nouvelle fonction : recherche d'ami compatible avec l'utilisateur dans la table 
 <div class="gamers">
     <!-- section title -->
     <div class="title">
-        <img src="templates\assets\pictures\icons8-manette-50.png" alt="icône d'une manette de jeux"/>
+        <img src="templates/assets/pictures/icons8-manette-50.png" alt="icône d'une manette de jeux"/>
         <h2>Joueurs</h2>
     </div>
 

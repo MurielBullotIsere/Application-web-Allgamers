@@ -11,7 +11,7 @@
  * @throws Exception Si une erreur survient lors de l'exécution de la requête.
 */
 require_once 'src/models/database/databaseConnection.php';
-require_once 'src\models\games\getGameData.php';
+require_once 'src/models/games/getGameData.php';
 function getPlayersData(array $listPlayers){
     $connection = bddConnect();
     $data = [];

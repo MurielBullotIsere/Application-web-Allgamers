@@ -6,10 +6,10 @@
  * by filling $_SESSION['playerSelectionCriteria'] with the value “1”.
  *
  * @throws Exception If the request is not POST.
- * @return void Redirects to the controller that manages the 'players' section: 'src\controllers\pages\playersPageCtrl.php'.
+ * @return void Redirects to the controller that manages the 'players' section: 'src/controllers/pages/playersPageCtrl.php'.
  */
 
-require_once 'src\models\database\tokenValidityCheck.php';
+require_once 'src/models/database/tokenValidityCheck.php';
 
 function chooseGamesSelected(){
     $rightUser = tokenValidityCheck();

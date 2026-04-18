@@ -6,7 +6,7 @@
  * @return array|null Tableau des données si trouvé, sinon null.
  */
 require_once 'src/models/users/getAlias.php';
-require_once 'src\models\database\updateToken.php';
+require_once 'src/models/database/updateToken.php';
 
 // $input contient les deux champs du loginForm ($_POST)
 function userExistence(array $input) {

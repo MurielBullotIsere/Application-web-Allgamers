@@ -17,8 +17,8 @@
  *                       'ageRangeUser',
  *                       'csrf_token']
  *  
- * @param array $input Données provenant du formulaire de connexion `templates\userAuthentification\loginForm.php'
- *                                    ou du formulaire de connexion 'templates\userAuthentification\loginFormForCorrection.php'
+ * @param array $input Données provenant du formulaire de connexion `templates/userAuthentification/loginForm.php'
+ *                                    ou du formulaire de connexion 'templates/userAuthentification/loginFormForCorrection.php'
  *                     Le tableau doit contenir les clés suivantes :
  *                     - 'alias' : Identifiant ou alias de l'utilisateur (string).
  *                     - 'passwordUser' : Mot de passe de l'utilisateur (string).
@@ -26,8 +26,8 @@
  * @throws Exception Si la requête n'est pas une requête POST.
  * @throws Exception Si les données du formulaire sont invalides (absence ou contenu vide des champs obligatoires).
  * 
- * @return void Redirige vers le controleur qui gère la page principale en cas de succès : 'src\controllers\pages\mainPageCtrl.php', 
- *           ou charge la page du formulaire pré rempli de connexion en cas d'échec : 'templates\userAuthentification\loginFormForCorrection.php'.
+ * @return void Redirige vers le controleur qui gère la page principale en cas de succès : 'src/controllers/pages/mainPageCtrl.php', 
+ *           ou charge la page du formulaire pré rempli de connexion en cas d'échec : 'templates/userAuthentification/loginFormForCorrection.php'.
  */
 
 require_once 'src/models/users/userExistence.php';
@@ -48,7 +48,7 @@ function getUserData(array $input){
                 exit(); 
             }
             else {
-                require 'templates\userAuthentification\loginFormForCorrection.php';
+                require 'templates/userAuthentification/loginFormForCorrection.php';
             }
         } else {
             throw new Exception('Les données du formulaire sont invalides.');

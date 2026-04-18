@@ -29,7 +29,7 @@
  *
  *                et charge et affiche la page qui gère la section "joueurs".
  * 
- * @param array $input provenant du formulaire templates\players\playersSelectedForm.php, 
+ * @param array $input provenant du formulaire templates/players/playersSelectedForm.php, 
  * contenant obligatoirement :
  *          - 'criteriaLevel' : Le niveau de jeu du joueur à sélectionner (string).
  *          - 'criteriaWeekdays' : le jour de disponibilité du joueur à sélectionner (string).
@@ -44,9 +44,9 @@
  *
  * @throws Exception Si la requête n'est pas de type POST.
  * @throws Exception si les données du formulaire sont invalides.
- * @return void charge la page qui gère la section 'joueurs' : 'templates\pages\playersPage.php'.
+ * @return void charge la page qui gère la section 'joueurs' : 'templates/pages/playersPage.php'.
  */
-require_once 'src\models\database\tokenValidityCheck.php';
+require_once 'src/models/database/tokenValidityCheck.php';
 
 
 function playerSelectionFormFilled(array $input){

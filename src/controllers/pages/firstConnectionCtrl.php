@@ -11,7 +11,7 @@
 
 require_once 'src/models/games/getGamesSelectable.php'; 
 require_once 'src/models/games/getGamesSelected.php'; 
-require_once 'src\models\database\tokenValidityCheck.php';
+require_once 'src/models/database/tokenValidityCheck.php';
 
 
 function firstConnection() {

@@ -1,12 +1,12 @@
 <!--/** Displays the player's friends list. 
- * called in templates\pages\playersPage.php, in <section class="friends">
+ * called in templates/pages/playersPage.php, in <section class="friends">
  *
  * Checks that the friends list is not empty.
  * Displays the alias and age range of each friend.
  * Dynamically updates the title according to the number of friends.
  *
  * Variables used :
- * @var array $listOfFriends List of player's friends given in src\controllers\pages\playersPageCtrl.php
+ * @var array $listOfFriends List of player's friends given in src/controllers/pages/playersPageCtrl.php
  */
 -->
 <h3 class="friendSelected"></h3>

@@ -20,9 +20,9 @@
  * @throws Exception Si les données du formulaire sont invalides (champs manquants ou vides).
  *
  * @return void Redirige vers :
- *     - Redirige vers le controleur qui gère la page de première utilisation en cas de succès : 'src\controllers\pages\firstConnectionCtrl.php'
- *     - Charge la page du formulaire pré rempli d'enregistrement si le pseudonyme est déjà utilisé : 'templates\userAuthentification\aliasAlreadyTaken.php'
- *     - Charge la page du formulaire pré rempli d'enregistrement si le mot de passe n'est pas suffisamment robuste : 'templates\userAuthentification\passwordNotStrong.php'
+ *     - Redirige vers le controleur qui gère la page de première utilisation en cas de succès : 'src/controllers/pages/firstConnectionCtrl.php'
+ *     - Charge la page du formulaire pré rempli d'enregistrement si le pseudonyme est déjà utilisé : 'templates/userAuthentification/aliasAlreadyTaken.php'
+ *     - Charge la page du formulaire pré rempli d'enregistrement si le mot de passe n'est pas suffisamment robuste : 'templates/userAuthentification/passwordNotStrong.php'
  */
 
 
@@ -53,7 +53,7 @@ function createUser(array $input){
                     exit(); 
                 } 
                 else {
-                    require 'templates\userAuthentification\aliasAlreadyTaken.php';
+                    require 'templates/userAuthentification/aliasAlreadyTaken.php';
                 }
             }
             else {
