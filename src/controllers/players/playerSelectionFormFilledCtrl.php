@@ -1,53 +1,49 @@
 <?php 
-/**
- *      change de liste de jeux 
- *   ou stocke les valeurs du formulaire dans $_SESSION['playerSelectionCriteria`]
- *
- * Cette fonction vérifie la valeur de 'criteriaGamesSelected' et celle de 'criteriaFavoriteGames',
- * si une des deux vaut "0" (demande de changement de liste) alors 
- *      la fonction change la valeur de  $_SESSION['playerSelectionrCiteria']['list'] 
- *      et redirige vers la page qui gère la section 'joueur'.
- * sinon
- *      la fonction enregistre les critères de sélection de l'utilisateur
- *                en remplissant $_SESSION['playerSelectionrCiteria'].
- * 
- *      Ces critères deviennent :
- *      - 'choice' : "1" pour signaler que le formulaire est rempli, "0" si non rempli
- *      - 'gameSelected' : soit "*" pour sélectionner tous les jeux de la liste des jeux sélectionnés,
- *                         soit "allFavorite" pour sélectionner tous les jeux de la liste des jeux favoris,
- *                         soit l'id d'un jeu.
- *      - 'level' : soit "*" pour sélectionner tous les niveaux
- *                  soit un niveau de jeu (beginner, confirmed, expert, master).
- *      - 'weekday' : soit "week" pour tous les jours,
- *                    soit un jour de la semaine (monday, tuesday, wednesday, thursday, friday, saturday, sunday).
- *      - 'hour' : soit "*" pour toutes les heures
- *                 soit "allMorning" pour toutes les heures entre 1h et 12h,
- *                 soit "allAfternoon" pour toutes les heures entre 13h et 24h,
- *                 soit une heure précise.
- *      - 'age' : soit "range0" pour sélectionner toutes les tranches d'âge
- *                soit une tranche d'age (range1, range2, range3, range4)
- *
- *                et charge et affiche la page qui gère la section "joueurs".
- * 
- * @param array $input provenant du formulaire templates/players/playersSelectedForm.php, 
- * contenant obligatoirement :
- *          - 'criteriaLevel' : Le niveau de jeu du joueur à sélectionner (string).
- *          - 'criteriaWeekdays' : le jour de disponibilité du joueur à sélectionner (string).
- *          - 'criteriaPeriod' : la période de disponibilité  (journée, matin, après-midi) du joueur à sélectionner (string).
- *          - 'criteriaAge' : la tranche d'âge du joueur à sélectionner (string).
- * contenant, selon la valeur de $_SESSION['playerSelectionCriteria']['list'] :
- *          soit - 'criteriaGamesSelected' : L'id du jeu sélectionné parmi la liste des jeux sélectionnés par l'utilisateur (number)('list' = "1") ou tous les jeux.
- *          soit - 'criteriaFavoriteGames' : L'id du jeu sélectionné parmi la liste des jeux favoris de l'utilisateur (number)('list' = "2"). ou tous les jeux
- * contenant, selon la valeur de 'criteriaPeriod' :
- *          soit - 'criteriaHourAM' : une heure entre 1h et 12h (string). 
- *          soit - 'criteriaHourPM' : une heure entre 13h et 24h (string). 
- *
- * @throws Exception Si la requête n'est pas de type POST.
- * @throws Exception si les données du formulaire sont invalides.
- * @return void charge la page qui gère la section 'joueurs' : 'templates/pages/playersPage.php'.
- */
+
 require_once 'src/models/database/tokenValidityCheck.php';
 
+/**
+ * Switch game list or store form values in $_SESSION['playerSelectionCriteria'].
+ *
+ * Validates the CSRF token and the HTTP method, then checks the values of
+ * 'criteriaGamesSelected' and 'criteriaFavoriteGames' :
+ *
+ * - If one of them equals "0" (list switch request) :
+ *      updates $_SESSION['playerSelectionCriteria']['list'] and redirects to the players page.
+ * - Otherwise :
+ *      stores the player selection criteria in $_SESSION['playerSelectionCriteria'] :
+ *          - 'choice'       : "1" if the form is filled, "0" otherwise.
+ *          - 'gameSelected' : "*" for all selected games,
+ *                             "allFavorite" for all favorite games,
+ *                             or a specific game id.
+ *          - 'level'        : "*" for all levels,
+ *                             or a game level (beginner, confirmed, expert, master).
+ *          - 'weekday'      : "week" for all days,
+ *                             or a specific day (monday, tuesday, wednesday, thursday, friday, saturday, sunday).
+ *          - 'hour'         : "*" for all hours,
+ *                             "allMorning" for hours between 1h and 12h,
+ *                             "allAfternoon" for hours between 13h and 24h,
+ *                             or a specific hour.
+ *          - 'age'          : "range0" for all age ranges,
+ *                             or a specific range (range1, range2, range3, range4).
+ *
+ * @param array $input Form data from templates/players/playersSelectedForm.php, must contain :
+ *          - 'criteriaLevel'    : The game level to filter by (string).
+ *          - 'criteriaWeekdays' : The availability day to filter by (string).
+ *          - 'criteriaPeriod'   : The availability period (full day, morning, afternoon) (string).
+ *          - 'criteriaAge'      : The age range to filter by (string).
+ *      And, depending on $_SESSION['playerSelectionCriteria']['list'] :
+ *          - 'criteriaGamesSelected' : game id from the user's selected games list (list = "1").
+ *          - 'criteriaFavoriteGames' : game id from the user's favorite games list (list = "2").
+ *      And, depending on 'criteriaPeriod' :
+ *          - 'criteriaHourAM' : an hour between 1h and 12h (string).
+ *          - 'criteriaHourPM' : an hour between 13h and 24h (string).
+ *
+ * @throws Exception If the request method is not POST.
+ * @throws Exception If form data is invalid (missing or empty values).
+ * @return void Redirects to index.php?action=playersPage on success,
+ *              or terminates with die() if the CSRF token is invalid.
+ */
 
 function playerSelectionFormFilled(array $input){
     $rightUser = tokenValidityCheck();
@@ -55,11 +51,9 @@ function playerSelectionFormFilled(array $input){
         die("Invalid CSRF token");
     }
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // liste choisie : jeux sélectionnés
+        // Selected list: Games selected by the user
         if ($_SESSION['playerSelectionCriteria']['list'] === "1"){
-            // si les variables existent et ne sont pas vide
             if (isset($input['criteriaGamesSelected']) && $input['criteriaGamesSelected'] !== '') {
-                // si demande de changement de liste :
                if ($input['criteriaGamesSelected'] === "0"){
                     $_SESSION['playerSelectionCriteria']['list'] = "2";
                     $_SESSION['playerSelectionCriteria']['choice'] = "0";
@@ -74,10 +68,9 @@ function playerSelectionFormFilled(array $input){
                 throw new Exception('Les données du formulaire sont invalides.');
             }
         }
-        // liste choisie : jeux favoris
+        // Selected list: games in the user's favorites
         else if ($_SESSION['playerSelectionCriteria']['list'] === "2"){
             if (isset($input['criteriaFavoriteGames']) && $input['criteriaFavoriteGames'] !== '') {
-                // si demande de changement de liste :
                 if ($input['criteriaFavoriteGames'] === "0"){
                     $_SESSION['playerSelectionCriteria']['list'] = "1";
                     $_SESSION['playerSelectionCriteria']['choice'] = "0";
@@ -93,29 +86,24 @@ function playerSelectionFormFilled(array $input){
             }
         }
 
-        // définir les critères simples (qui ne dépendent pas d'un choix préalable)
+        // define simple criteria
         if (isset($input['criteriaLevel'], $input['criteriaWeekdays'], $input['criteriaPeriod'], $input['criteriaAge'])
           && $input['criteriaLevel'] !== '' 
           && $input['criteriaWeekdays'] !== ''
           && $input['criteriaPeriod'] !== ''
           && $input['criteriaAge'] !== '') {
-            // définir le niveau
             $_SESSION['playerSelectionCriteria']['level'] = $input['criteriaLevel'];
-            // définr le jour
             $_SESSION['playerSelectionCriteria']['weekday'] = $input['criteriaWeekdays'];
-            // définir l'âge
             $_SESSION['playerSelectionCriteria']['age'] = $input['criteriaAge'];        
         } 
         else {
             throw new Exception('Les données du formulaire sont invalides.');
         }
 
-        // définir l'heure selon la période choisie
-        // toute la journée
+        // set the time according to the selected time period
         if ($input['criteriaPeriod'] === '*') {
             $_SESSION['playerSelectionCriteria']['hour'] = "*";
         } 
-        // le matin
         if ($input['criteriaPeriod'] === 'morning') {
             if (isset($input['criteriaHourAM']) && $input['criteriaHourAM'] !== '') {
                 $_SESSION['playerSelectionCriteria']['hour'] = $input['criteriaHourAM'];
@@ -124,17 +112,15 @@ function playerSelectionFormFilled(array $input){
                 throw new Exception('Les données du formulaire sont invalides.');
             }
         }
-        // l'après-midi
         if ($input['criteriaPeriod'] === 'afternoon') {
             if (isset($input['criteriaHourPM']) && $input['criteriaHourPM'] !== '') {
-                $_SESSION['playerSelectionCriteria']['hour'] = $input['criteriaHourAM'];
+                $_SESSION['playerSelectionCriteria']['hour'] = $input['criteriaHourPM'];
             }
             else {
                 throw new Exception('Les données du formulaire sont invalides.');
             }
         }
 
-        // prévenir que le formulaire est rempli        
         $_SESSION['playerSelectionCriteria']['choice'] = "1";
         header("Location: index.php?action=playersPage");
         exit(); 

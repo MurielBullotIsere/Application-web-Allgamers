@@ -1,12 +1,12 @@
 <?php 
-/**
- *  Affiche la page d'inscription.
- *
- * Cette fonction charge et affiche la page d'inscription.
- *
- * @return void Charge la page d'inscription : 'templates/userAuthentification/registrationForm.php'.
- **/
 
-function inscription(){   
+/**
+ * Display the registration page.
+ *
+ * Loads the registration page.
+ *
+ * @return void Loads templates/userAuthentification/registrationForm.php.
+ */
+function inscription(): void {   
     require 'templates/userAuthentification/registrationForm.php';
 }

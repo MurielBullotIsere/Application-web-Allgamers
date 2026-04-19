@@ -1,22 +1,23 @@
 <?php
 
-/**
- * Vérifie le token de l'utilisateur
- * 
- * compare le token stocké en session avec celui de la base de données.
- *
- * @return bool true si le token est valide, false sinon 
- * @throws Exception Si une erreur survient lors de la préparation de la requête.
- * @throws Exception Si une erreur survient lors de l'exécution de la requête.
- */
 require_once 'src/models/database/databaseConnection.php';
 
-function tokenValidityCheck() {
+/**
+ * Check the user's CSRF token.
+ *
+ * Compares the token stored in the session with the one stored in the database.
+ *
+ * @return bool True if the token is valid, false otherwise.
+ * @throws Exception If the session data or token is missing.
+ * @throws Exception If an error occurs during query preparation.
+ * @throws Exception If an error occurs during query execution.
+ * @throws Exception If no user or more than one user is found.
+ */
+function tokenValidityCheck(): bool {
     $connection = bddConnect();
     $idUser = $_SESSION['userData']['id'] ?? null;
     $tokenOfSession = $_SESSION['userData']['csrf_token'] ?? null;
 
-    // Validation des données de la session
     if (!$idUser || !$tokenOfSession) {
         throw new Exception("Les informations utilisateur ou le token de session sont manquants.");
     }
@@ -41,13 +42,11 @@ function tokenValidityCheck() {
     $row = $result->fetch_assoc();
     $tokenOfDatabase = $row['token'];
 
-    // Libération des ressources
     $result->free();
     $statement->close();
     $connection->close();
     
-    // comparaison des 2 tokens, celui enregistré dans bdd et celui enregistré dans la session
-    // Utilisation de hash_equals pour éviter les attaques par timing.
+    // Uses hash_equals to prevent timing attacks.
     return hash_equals($tokenOfSession, $tokenOfDatabase); 
 }
     

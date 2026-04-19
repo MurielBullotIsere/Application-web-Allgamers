@@ -10,11 +10,11 @@
  *    - the database name. 
  * If the connection fails, an error is logged, and an exception is thrown.
  *  
- *  @return mysqli mysqli An instance of the MySQLi connection.
+ * @return mysqli An instance of the MySQLi connection.
  * @throws Exception If an error occurs during the connection.
  */
 
- function bddConnect() {
+ function bddConnect(): mysqli {
     $servername = "localhost";
     $username = "root";
     $password = "";
@@ -22,7 +22,6 @@
 
     $connection = new mysqli($servername, $username, $password, $base);
     
-    // Check connection
     if ($connection->connect_error) {
         error_log("Erreur de connexion à la base de données : " . $connection->connect_error);
         throw new Exception("Erreur de connexion à la base de données : ");

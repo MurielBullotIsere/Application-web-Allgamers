@@ -1,39 +1,30 @@
 <?php 
-/**
- * Enregistrement des données de l'utilisateur. 
- *
- * Cette fonction effectue la vérification de validité de la robustesse du mot de passe via la fonction 'checkPasswordStrength' et 
- *                redirige l'utilisateur vers la page de connexion pré remplie si la vérification est un échec,
- *                vérifie que la création du joueur dans la base de données a été possible via la fonction 'createUserData' et
- *                redirige l'utilisateur vers la page de connexion pré remplie si la création de l'utilisateur est un échec,
- *                redirige l'utilisateur vers la page de première utilisation si les vérification sont un succès.
- *
- * @param array $input Données provenant du formulaire, incluant :
- *                     - 'firstName' : Prénom du joueur (string, obligatoire).
- *                     - 'lastName' : Nom du joueur (string, obligatoire).
- *                     - 'alias' : Pseudonyme unique du joueur (string, obligatoire).
- *                     - 'ageRange' : Tranche d'âge du joueur (string, obligatoire).
- *                     - 'adMail' : Adresse e-mail du joueur (string, obligatoire).
- *                     - 'passwordUser' : Mot de passe choisi par le joueur (string, obligatoire).
- * 
- * @throws Exception Si la requête n'est pas de type POST.
- * @throws Exception Si les données du formulaire sont invalides (champs manquants ou vides).
- *
- * @return void Redirige vers :
- *     - Redirige vers le controleur qui gère la page de première utilisation en cas de succès : 'src/controllers/pages/firstConnectionCtrl.php'
- *     - Charge la page du formulaire pré rempli d'enregistrement si le pseudonyme est déjà utilisé : 'templates/userAuthentification/aliasAlreadyTaken.php'
- *     - Charge la page du formulaire pré rempli d'enregistrement si le mot de passe n'est pas suffisamment robuste : 'templates/userAuthentification/passwordNotStrong.php'
- */
-
-
-
 
 require_once('src/models/users/createUserData.php');
 require_once('src/models/users/checkPasswordStrength.php');
 
-// récupère les données du formulaire qui vient de registrationForm.php
-function createUser(array $input){
-    // vérifie que la requête est une requête POST
+/**
+ * Register a new user.
+ *
+ * Validates the HTTP method and form data, checks password strength
+ * via `checkPasswordStrength`, then attempts to create the user
+ * in the database via `createUserData`.
+ *
+ * @param array $input Form data from templates/userAuthentification/registrationForm.php, must contain :
+ *                  - 'firstName'    : Player's first name (string).
+ *                  - 'lastName'     : Player's last name (string).
+ *                  - 'alias'        : Player's unique alias (string).
+ *                  - 'ageRange'     : Player's age range (string).
+ *                  - 'adMail'       : Player's email address (string).
+ *                  - 'passwordUser' : Player's chosen password (string).
+ *
+ * @throws Exception If the request method is not POST.
+ * @throws Exception If form data is invalid (missing or empty values).
+ * @return void Redirects to index.php?action=firstConnection on success,
+ *              loads templates/userAuthentification/aliasAlreadyTaken.php if the alias is already taken,
+ *              loads templates/userAuthentification/passwordNotStrong.php if the password is too weak.
+ */
+function createUser(array $input): void {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($input['firstName'], $input['lastName'], $input['alias'],
                   $input['ageRange'], $input['adMail'], $input['passwordUser'])
@@ -43,12 +34,10 @@ function createUser(array $input){
                 && $input['ageRange'] !== '' 
                 && $input['adMail'] !== '' 
                 && $input['passwordUser'] !== '') {
-            // vérifie que le mot de passe est robuste
             if (checkPasswordStrength($input['passwordUser'])){ 
                 $success = createUserData($input);
-                // vérifie que les données sont bien enregistrées
                 if ($success) {
-                    $_SESSION['userData'] = $success;  // Stocker les données dans la session
+                    $_SESSION['userData'] = $success;
                     header("Location: index.php?action=firstConnection");
                     exit(); 
                 } 
@@ -68,4 +57,3 @@ function createUser(array $input){
         throw new Exception("Ce n'est pas une requête POST");
     }
 }
-

@@ -1,20 +1,20 @@
 <?php 
-/**
- * Display the first use page.
- *
- * This function retrieves the list of games selectable via the getGamesSelectable function, 
- *               retrieves the list of games already selected via the getGamesSelected function, 
- *               loads and displays the user's first use page.
- * 
- * @return void Loads the first-use page: `templates/pages/newUserPage.php`.
- */
 
 require_once 'src/models/games/getGamesSelectable.php'; 
 require_once 'src/models/games/getGamesSelected.php'; 
 require_once 'src/models/database/tokenValidityCheck.php';
 
-
-function firstConnection() {
+/**
+ * Display the first use page.
+ *
+ * Validates the CSRF token, retrieves the list of selectable games
+ * via `getGamesSelectable` and the list of already selected games
+ * via `getGamesSelected`, then loads the first-use page.
+ *
+ * @return void Loads templates/pages/newUserPage.php on success,
+ *              or terminates with die() if the CSRF token is invalid.
+ */
+function firstConnection(): void {
     $rightUser = tokenValidityCheck();
     if (!$rightUser) {
         die("Invalid CSRF token");
@@ -23,4 +23,3 @@ function firstConnection() {
     $listOfGamesSelected = getGamesSelected();
     require 'templates/pages/newUserPage.php';
 }
-

@@ -1,17 +1,20 @@
 <?php 
-/**
- * Save choice : selected games.
- *
- * This function saves the player's choice 
- * by filling $_SESSION['playerSelectionCriteria'] with the value “1”.
- *
- * @throws Exception If the request is not POST.
- * @return void Redirects to the controller that manages the 'players' section: 'src/controllers/pages/playersPageCtrl.php'.
- */
 
 require_once 'src/models/database/tokenValidityCheck.php';
 
-function chooseGamesSelected(){
+/**
+ * Save the player's selection criteria: selected games.
+ *
+ * Validates the CSRF token and the HTTP method before saving
+ * the player's selection criteria in the session.
+ * Sets $_SESSION['playerSelectionCriteria']['list'] to "1",
+ * which corresponds to the "selected games" filter.
+ *
+ * @throws Exception If the request method is not POST.
+ * @return void Redirects to index.php?action=playersPage on success,
+ *              or terminates with die() if the CSRF token is invalid.
+ */
+function chooseGamesSelected(): void {
     $rightUser = tokenValidityCheck();
     if (!$rightUser) {
         die("Invalid CSRF token");

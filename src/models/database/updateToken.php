@@ -1,16 +1,17 @@
 <?php
-/**
- * Met à jour le token dans la table 'user' pour un utilisateur précis.
- *
- * @param string $token Le nouveau token à définir pour l'utilisateur.
- * @param string $userId L'identifiant de l'utilisateur.
- * @throws Exception Si une erreur survient lors de la préparation ou de l'exécution de la requête.
- */
+
 require_once 'src/models/database/databaseConnection.php';
 
+/**
+ * Update the token in the 'user' table for a specific user.
+ *
+ * @param string $token  The new token to set for the user.
+ * @param string $userId The user's identifier.
+ * @throws Exception If an error occurs during query preparation.
+ * @throws Exception If an error occurs during query execution.
+ */
 function updateToken(string $token, string $userId): void {
     $connection = bddConnect();
-    // $sql = "UPDATE user SET token = $token WHERE id = $userId;
 
     $sql = "UPDATE user SET token = ? WHERE id = ?";
 

@@ -10,8 +10,10 @@ Voici ce qui peut être testé :
 - la gestion des jeux favoris de l'utilisateur,  
 - la recherche d'autres joueurs (sections "Joueurs").  
 
-
 ### Accès au jeu 
+allgamers.infinityfreeapp.com/Application-web-Allgamers/index.php   
+
+ou  
 
 Installer xampp  
 Se placer dans le dossier xampp/htdocs  
