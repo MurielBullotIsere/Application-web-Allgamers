@@ -1,69 +1,71 @@
 <?php
-/**
- * Enregistrer l'id du jeu et l'id du joueur dans la table gamesuser
- * 
- * @param array Données d'entrée provenant du formulaire.
- * @return array Données insérées dans la base de données.
- * @throws Exception Si un enregistrement identique existe déjà.
- * @throws Exception Si une erreur survient lors de la préparation de la requête.
- * @throws Exception Si une erreur survient lors de l'exécution de la requête.
- */
-
 
 require_once 'src/models/database/databaseConnection.php';
-require_once 'getUserGames.php';
+require_once 'src/models/users/getUserGames.php';
 
-function createUserGame(array $input) {
+/**
+ * Saves a game selection for the current user in the `gamesuser` table.
+ *
+ * Retrieves the user ID from the session, checks that the user-game
+ * combination does not already exist via getUserGames(), then inserts
+ * the new record into the database.
+ *
+ * @param array $input Form data from templates/pages/newUserPage.php,
+ *                     must contain:
+ *                          - 'chooseAGame'  : The selected game's ID (string).
+ *                          - 'levelGame'    : The user's level for this game (string).
+ *                          - 'favoriteGame' : Whether the game is a favorite, "0" or "1" (string).
+ *
+ * @throws Exception If the user-game combination already exists in the database.
+ * @throws Exception If query preparation fails.
+ * @throws Exception If query execution fails.
+ * @return array The inserted data, containing:
+ *                          - 'idUser'       : The user's ID (string).
+ *                          - 'idGame'       : The game's ID (string).
+ *                          - 'levelGame'    : The user's level for this game (string).
+ *                          - 'favoriteGame' : Whether the game is a favorite, "0" or "1" (string).
+ *
+ * @example
+ *      $data = createUserGame($_POST);
+ */
+function createUserGame(array $input): array
+{
     $data = [
-        'idUser' => $_SESSION['userData']['id'],
-        'idGame' => $input['chooseAGame'],
-        'levelGame' => $input['levelGame'],
-        'favoriteGame' =>  $input['favoriteGame'],
+        'idUser'       => $_SESSION['userData']['id'],
+        'idGame'       => $input['chooseAGame'],
+        'levelGame'    => $input['levelGame'],
+        'favoriteGame' => $input['favoriteGame'],
     ];
 
-    // vérification de l'inexistance d'un enregistrement identique (normlement, 2 enregistrements identiques est impossible)
-    $existingProfile = getUserGames($data['idUser'], $data['idGame']);
-    if($existingProfile) {
-        throw new Exception("Erreur");
+    $existingRecord = getUserGames($data['idUser'], $data['idGame']);
+    if ($existingRecord) {
+        throw new Exception("Cet enregistrement utilisateur-jeu existe déjà.");
     }
 
     $connection = bddConnect();
 
-    $sql = "INSERT INTO gamesuser(idUser, 
-                                    idGame, 
-                                    levelGame, 
-                                    favoriteGame) 
-                VALUES (?, ?, ?, ?)";
+    $sql = "INSERT INTO gamesuser (idUser, idGame, levelGame, favoriteGame)
+            VALUES (?, ?, ?, ?)";
     $statement = $connection->prepare($sql);
     if (!$statement) {
         error_log("Erreur de préparation de la requête : " . $connection->error);
-        throw new Exception("Échec de la préparation de la requête : ");
-    }
-    $statement->bind_param("ssss", $data['idUser'], 
-                                    $data['idGame'], 
-                                    $data['levelGame'], 
-                                    $data['favoriteGame']);
-    if (!$statement->execute()) {
-        error_log("Erreur lors de l'exécution de la requête : " . $statement->error);
-        throw new Exception("Erreur lors de l'exécution de la requête : ");
+        throw new Exception("Échec de la préparation de la requête.");
     }
 
-    // Libérer les résultats et les ressources pour éviter des fuites mémoire
+    $statement->bind_param(
+        "ssss",
+        $data['idUser'],
+        $data['idGame'],
+        $data['levelGame'],
+        $data['favoriteGame']
+    );
+    if (!$statement->execute()) {
+        error_log("Erreur lors de l'exécution de la requête : " . $statement->error);
+        throw new Exception("Erreur lors de l'exécution de la requête.");
+    }
+
     $statement->close();
     $connection->close();
 
     return $data;
-}    
-// $connection = bddConnect();
-// $sql = "UPDATE gamesuser SET idUser = ?, 
-//                                idGame = ?, 
-//                                levelGame = ?,
-//                                favoriteGame = ?
-//                             WHERE id = ?";
-// $statement = $connection->prepare($sql);
-// $statement->bind_param("ssssi", $data['idUser'], 
-//                                 $data['idGame'], 
-//                                 $data['levelGame'], 
-//                                 $data['favoriteGame'],
-//                                 $getId);
-// $statement ->execute();
+}
